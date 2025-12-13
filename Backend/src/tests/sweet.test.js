@@ -58,4 +58,16 @@ describe("Sweet API", () => {
     expect(res.body.length).toBeGreaterThan(0);
     // testing with postman-api-is done
   });
+
+  it("should search sweets by category", async () => {
+  const res = await request(app)
+    .get("/api/sweets/search?category=Indian")
+    .set("Authorization", `Bearer ${token}`);
+
+  expect(res.statusCode).toBe(200);
+  expect(res.body.length).toBeGreaterThan(0);
+  expect(res.body[0]).toHaveProperty("category", "Indian");
+});
+
+
 });
