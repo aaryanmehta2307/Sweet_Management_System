@@ -56,5 +56,6 @@ describe("Sweet API", () => {
 
     expect(res.statusCode).toBe(200);
     expect(res.body.length).toBeGreaterThan(0);
+    // testing with postman-api-is done
   });
 });
