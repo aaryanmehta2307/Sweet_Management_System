@@ -1,144 +1,18 @@
 const express = require("express");
-const Sweet = require("../models/Sweet");
 const authMiddleware = require("../middleware/auth.middleware");
+const adminMiddleware = require("../middleware/admin.middleware");
+const controller = require("../controllers/sweet.controller");
 
 const router = express.Router();
 
-// ADD SWEET
-router.post("/", authMiddleware, async (req, res) => {
-  try {
-    const sweet = await Sweet.create(req.body);
-    res.status(201).json(sweet);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-});
+router.post("/", authMiddleware, controller.addSweet);
+router.get("/", authMiddleware, controller.getSweets);
+router.get("/search", authMiddleware, controller.searchSweets);
 
-// GET ALL SWEETS
-router.get("/", authMiddleware, async (req, res) => {
-  try {
-    const sweets = await Sweet.find();
-    res.json(sweets);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-});
+router.put("/:id", authMiddleware, adminMiddleware, controller.updateSweet);
+router.delete("/:id", authMiddleware, adminMiddleware, controller.deleteSweet);
 
-// SEARCH SWEETS
-router.get("/search", authMiddleware, async (req, res) => {
-  try {
-    const { name, category, minPrice, maxPrice } = req.query;
-
-    const query = {};
-
-    if (name) {
-      query.name = { $regex: name, $options: "i" };
-    }
-
-    if (category) {
-      query.category = category;
-    }
-
-    if (minPrice || maxPrice) {
-      query.price = {};
-      if (minPrice) query.price.$gte = Number(minPrice);
-      if (maxPrice) query.price.$lte = Number(maxPrice);
-    }
-
-    const sweets = await Sweet.find(query);
-    res.json(sweets);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-});
-const adminMiddleware = require("../middleware/admin.middleware");
-
-// UPDATE SWEET (ADMIN)
-router.put("/:id", authMiddleware, adminMiddleware, async (req, res) => {
-  try {
-    const sweet = await Sweet.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true }
-    );
-
-    if (!sweet) {
-      return res.status(404).json({ message: "Sweet not found" });
-    }
-
-    res.json(sweet);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-});
-
-// DELETE SWEET (ADMIN)
-router.delete("/:id", authMiddleware, adminMiddleware, async (req, res) => {
-  try {
-    const sweet = await Sweet.findByIdAndDelete(req.params.id);
-
-    if (!sweet) {
-      return res.status(404).json({ message: "Sweet not found" });
-    }
-
-    res.json({ message: "Sweet deleted successfully" });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-});
-
-// PURCHASE SWEET (USER)
-router.post("/:id/purchase", authMiddleware, async (req, res) => {
-  try {
-    const sweet = await Sweet.findById(req.params.id);
-
-    if (!sweet) {
-      return res.status(404).json({ message: "Sweet not found" });
-    }
-
-    if (sweet.quantity <= 0) {
-      return res.status(400).json({ message: "Out of stock" });
-    }
-
-    sweet.quantity -= 1;
-    await sweet.save();
-
-    res.json(sweet);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-});
-
-// RESTOCK SWEET (ADMIN)
-router.post(
-  "/:id/restock",
-  authMiddleware,
-  adminMiddleware,
-  async (req, res) => {
-    try {
-      const { quantity } = req.body;
-
-      if (!quantity || quantity <= 0) {
-        return res.status(400).json({ message: "Invalid quantity" });
-      }
-
-      const sweet = await Sweet.findById(req.params.id);
-
-      if (!sweet) {
-        return res.status(404).json({ message: "Sweet not found" });
-      }
-
-      sweet.quantity += Number(quantity);
-      await sweet.save();
-
-      res.json(sweet);
-    } catch (error) {
-      res.status(500).json({ message: error.message });
-    }
-  }
-);
-
-
-
+router.post("/:id/purchase", authMiddleware, controller.purchaseSweet);
+router.post("/:id/restock", authMiddleware, adminMiddleware, controller.restockSweet);
 
 module.exports = router;
