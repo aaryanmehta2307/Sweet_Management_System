@@ -136,6 +136,53 @@ it("should allow admin to delete a sweet", async () => {
   expect(res.statusCode).toBe(200);
 });
 
+it("should allow user to purchase a sweet", async () => {
+  const sweet = await Sweet.create({
+    name: "Ladoo",
+    category: "Indian",
+    price: 15,
+    quantity: 5
+  });
+
+  const res = await request(app)
+    .post(`/api/sweets/${sweet._id}/purchase`)
+    .set("Authorization", `Bearer ${token}`);
+
+  expect(res.statusCode).toBe(200);
+  expect(res.body.quantity).toBe(4);
+});
+
+it("should not allow purchase if sweet is out of stock", async () => {
+  const sweet = await Sweet.create({
+    name: "Halwa",
+    category: "Indian",
+    price: 20,
+    quantity: 0
+  });
+
+  const res = await request(app)
+    .post(`/api/sweets/${sweet._id}/purchase`)
+    .set("Authorization", `Bearer ${token}`);
+
+  expect(res.statusCode).toBe(400);
+});
+
+it("should allow admin to restock a sweet", async () => {
+  const sweet = await Sweet.create({
+    name: "Peda",
+    category: "Indian",
+    price: 25,
+    quantity: 2
+  });
+
+  const res = await request(app)
+    .post(`/api/sweets/${sweet._id}/restock`)
+    .set("Authorization", `Bearer ${adminToken}`)
+    .send({ quantity: 5 });
+
+  expect(res.statusCode).toBe(200);
+  expect(res.body.quantity).toBe(7);
+});
 
 
 
