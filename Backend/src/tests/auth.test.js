@@ -39,4 +39,17 @@ describe("Auth API", () => {
     expect(res.statusCode).toBe(200);
     expect(res.body).toHaveProperty("token");
   });
+  it("should register admin when valid admin key is provided", async () => {
+  const res = await request(app)
+    .post("/api/auth/register")
+    .send({
+      name: "Admin",
+      email: "admin@test.com",
+      password: "admin123",
+      adminKey: "123456"
+    });
+
+  expect(res.body.role).toBe("admin");
+});
+
 });
