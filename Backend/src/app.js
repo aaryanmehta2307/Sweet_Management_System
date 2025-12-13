@@ -12,4 +12,5 @@ app.get("/", (req, res) => {
   res.send("Sweet Shop API is running 🚀");
 });
 
+app.use("/api/sweets", require("./routes/sweet.routes"));
 module.exports = app;
