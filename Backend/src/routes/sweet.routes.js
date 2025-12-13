@@ -51,6 +51,42 @@ router.get("/search", authMiddleware, async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+const adminMiddleware = require("../middleware/admin.middleware");
+
+// UPDATE SWEET (ADMIN)
+router.put("/:id", authMiddleware, adminMiddleware, async (req, res) => {
+  try {
+    const sweet = await Sweet.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+
+    if (!sweet) {
+      return res.status(404).json({ message: "Sweet not found" });
+    }
+
+    res.json(sweet);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
+// DELETE SWEET (ADMIN)
+router.delete("/:id", authMiddleware, adminMiddleware, async (req, res) => {
+  try {
+    const sweet = await Sweet.findByIdAndDelete(req.params.id);
+
+    if (!sweet) {
+      return res.status(404).json({ message: "Sweet not found" });
+    }
+
+    res.json({ message: "Sweet deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 
 
 module.exports = router;
