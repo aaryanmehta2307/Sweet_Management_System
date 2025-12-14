@@ -193,7 +193,7 @@ All code was reviewed and finalized manually.
 
 Co-authored-by: ChatGPT <AI@users.noreply.github.com>"
 
-###👨‍💻 Author
+👨‍💻 Author
 
 Aryan Mehta
 Bachelor of Computer Science
