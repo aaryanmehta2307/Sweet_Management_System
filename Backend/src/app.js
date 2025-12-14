@@ -13,4 +13,13 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/sweets", require("./routes/sweet.routes"));
+
+const walletRoutes = require("./routes/wallet.routes");
+
+app.use("/api/wallet", walletRoutes);
+const path = require("path");
+
+app.use("/uploads", express.static(path.join(__dirname, "..", "uploads")));
+
+
 module.exports = app;

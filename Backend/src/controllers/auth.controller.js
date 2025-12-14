@@ -1,7 +1,7 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
-
+const Wallet = require("../models/Wallet");
 const register = async (req, res) => {
   try {
     const { name, email, password, adminKey } = req.body;
@@ -20,6 +20,11 @@ const register = async (req, res) => {
       password: hashedPassword,
       role
     });
+
+    await Wallet.create({
+  user: user._id,
+  balance: 0
+});
 
     res.status(201).json({
       id: user._id,

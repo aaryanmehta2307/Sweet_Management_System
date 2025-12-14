@@ -1,19 +1,32 @@
-const BASE_URL = "https://sweet-management-system-rpzx.onrender.com";
+const BASE_URL = "http://localhost:5000";
 
-export const apiRequest = async (endpoint, data) => {
+export const apiRequest = async (
+  endpoint,
+  body = null,
+  method = "POST",
+  isFormData = false
+) => {
+  const token = localStorage.getItem("token");
+
   const res = await fetch(`${BASE_URL}${endpoint}`, {
-    method: "POST",
+    method,
     headers: {
-      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+      ...(isFormData ? {} : { "Content-Type": "application/json" }),
     },
-    body: JSON.stringify(data),
+    body: body
+      ? isFormData
+        ? body
+        : JSON.stringify(body)
+      : null,
   });
 
-  const result = await res.json();
+  const data = await res.json();
 
   if (!res.ok) {
-    throw new Error(result.message || "Something went wrong");
+    throw new Error(data.message || "Something went wrong");
   }
 
-  return result;
+  return data;
 };
+

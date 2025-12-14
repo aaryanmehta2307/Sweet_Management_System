@@ -1,23 +1,32 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { apiRequest } from "../services/api";
+import { jwtDecode } from "jwt-decode";
 
+/* ===================== LOGIN FORM ===================== */
 const LoginForm = ({ onSuccess }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
   const handleLogin = async () => {
+    setError("");
     try {
       const data = await apiRequest("/api/auth/login", {
         email,
         password,
       });
 
+      // save token
       localStorage.setItem("token", data.token);
-      onSuccess();
+
+      // decode role
+      const decoded = jwtDecode(data.token);
+
+      // callback with role
+      onSuccess(decoded.role);
     } catch (err) {
-      setError(err.message);
+      setError(err.message || "Login failed");
     }
   };
 
@@ -53,6 +62,7 @@ const LoginForm = ({ onSuccess }) => {
   );
 };
 
+/* ===================== SIGNUP FORM ===================== */
 const SignupForm = ({ switchToLogin }) => {
   const [form, setForm] = useState({
     name: "",
@@ -63,11 +73,12 @@ const SignupForm = ({ switchToLogin }) => {
   const [error, setError] = useState("");
 
   const handleSignup = async () => {
+    setError("");
     try {
       await apiRequest("/api/auth/register", form);
-      switchToLogin(); // move to login after signup
+      switchToLogin(); // redirect to login after signup
     } catch (err) {
-      setError(err.message);
+      setError(err.message || "Signup failed");
     }
   };
 
@@ -112,18 +123,28 @@ const SignupForm = ({ switchToLogin }) => {
   );
 };
 
+/* ===================== AUTH PAGE ===================== */
 const Auth = () => {
   const [isSignup, setIsSignup] = useState(false);
   const navigate = useNavigate();
+
+  // 🔥 ROLE-BASED REDIRECT
+  const handleLoginSuccess = (role) => {
+    if (role === "admin") {
+      navigate("/admin");
+    } else {
+      navigate("/dashboard");
+    }
+  };
 
   return (
     <div
       className="min-h-screen flex items-center justify-center px-4"
       style={{ backgroundColor: "var(--color-base)" }}
     >
-      <div className="relative w-full max-w-4xl min-h-[520px] md:h-[520px] rounded-2xl shadow-xl overflow-hidden">
+      <div className="relative w-full max-w-4xl min-h-[520px] md:h-[520px] rounded-2xl shadow-xl overflow-hidden bg-[var(--color-base)]">
 
-        {/* FORM */}
+        {/* FORM SECTION */}
         <div
           className={`w-full md:w-1/2 p-8 md:p-10 transition-transform duration-700 ${
             isSignup ? "md:translate-x-full" : ""
@@ -132,11 +153,11 @@ const Auth = () => {
           {isSignup ? (
             <SignupForm switchToLogin={() => setIsSignup(false)} />
           ) : (
-            <LoginForm onSuccess={() => navigate("/dashboard")} />
+            <LoginForm onSuccess={handleLoginSuccess} />
           )}
         </div>
 
-        {/* SLIDER (DESKTOP ONLY) */}
+        {/* SLIDER PANEL (DESKTOP) */}
         <div
           className={`hidden md:flex absolute top-0 right-0 w-1/2 h-full flex-col items-center justify-center text-center p-10 transition-transform duration-700 ${
             isSignup ? "-translate-x-full" : ""
