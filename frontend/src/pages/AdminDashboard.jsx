@@ -9,7 +9,6 @@ const AdminDashboard = () => {
   const [sweets, setSweets] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Add sweet
   const [form, setForm] = useState({
     name: "",
     category: "",
@@ -18,31 +17,22 @@ const AdminDashboard = () => {
   });
   const [image, setImage] = useState(null);
 
-  // Restock
   const [restockQty, setRestockQty] = useState({});
-
-  // Edit sweet
   const [editingSweet, setEditingSweet] = useState(null);
   const [editImage, setEditImage] = useState(null);
 
   /* ================= AUTH CHECK ================= */
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (!token) {
-      navigate("/auth");
-      return;
-    }
+    if (!token) return navigate("/auth");
 
     const decoded = jwtDecode(token);
-    if (decoded.role !== "admin") {
-      navigate("/dashboard");
-      return;
-    }
+    if (decoded.role !== "admin") return navigate("/dashboard");
 
     fetchSweets();
   }, []);
 
-  /* ================= FETCH SWEETS ================= */
+  /* ================= FETCH ================= */
   const fetchSweets = async () => {
     setLoading(true);
     const data = await apiRequest("/api/sweets/search", null, "GET");
@@ -50,14 +40,12 @@ const AdminDashboard = () => {
     setLoading(false);
   };
 
-  /* ================= ADD SWEET ================= */
+  /* ================= ADD ================= */
   const addSweet = async () => {
     if (!form.name || !form.category || !form.price || !form.quantity) return;
 
     const formData = new FormData();
-    Object.entries(form).forEach(([key, val]) =>
-      formData.append(key, val)
-    );
+    Object.entries(form).forEach(([k, v]) => formData.append(k, v));
     if (image) formData.append("image", image);
 
     await apiRequest("/api/sweets", formData, "POST", true);
@@ -67,65 +55,54 @@ const AdminDashboard = () => {
     fetchSweets();
   };
 
-  /* ================= UPDATE SWEET ================= */
+  /* ================= UPDATE ================= */
   const updateSweet = async () => {
     const formData = new FormData();
-
-    formData.append("name", editingSweet.name);
-    formData.append("category", editingSweet.category);
-    formData.append("price", editingSweet.price);
-    formData.append("quantity", editingSweet.quantity);
+    ["name", "category", "price", "quantity"].forEach((f) =>
+      formData.append(f, editingSweet[f])
+    );
     if (editImage) formData.append("image", editImage);
 
-    await apiRequest(
-      `/api/sweets/${editingSweet._id}`,
-      formData,
-      "PUT",
-      true
-    );
-
+    await apiRequest(`/api/sweets/${editingSweet._id}`, formData, "PUT", true);
     setEditingSweet(null);
     setEditImage(null);
     fetchSweets();
   };
 
-  /* ================= DELETE SWEET ================= */
+  /* ================= DELETE ================= */
   const deleteSweet = async (id) => {
     await apiRequest(`/api/sweets/${id}`, null, "DELETE");
     fetchSweets();
   };
 
-  /* ================= RESTOCK SWEET ================= */
+  /* ================= RESTOCK ================= */
   const restockSweet = async (id) => {
     const qty = restockQty[id];
     if (!qty || qty <= 0) return;
 
-    await apiRequest(`/api/sweets/${id}/restock`, {
-      quantity: Number(qty),
-    });
-
-    setRestockQty({ ...restockQty, [id]: "" });
+    await apiRequest(`/api/sweets/${id}/restock`, { quantity: Number(qty) });
+    setRestockQty((p) => ({ ...p, [id]: "" }));
     fetchSweets();
   };
 
   if (loading) return <p className="p-6">Loading admin dashboard...</p>;
 
   return (
-    <div className="min-h-screen px-6 py-6" style={{ backgroundColor: "var(--color-base)" }}>
+    <div className="min-h-screen px-4 md:px-6 py-6 bg-[var(--color-base)]">
       <h1 className="text-2xl font-bold mb-6">🛠 Admin Dashboard</h1>
 
-      {/* ================= ADD SWEET ================= */}
-      <div className="p-6 rounded-xl shadow mb-8" style={{ backgroundColor: "var(--color-soft)" }}>
+      {/* ADD SWEET */}
+      <div className="bg-[var(--color-soft)] p-5 rounded-xl shadow mb-8">
         <h2 className="text-lg font-semibold mb-4">Add New Sweet</h2>
 
-        <div className="grid md:grid-cols-4 gap-4">
-          {["name", "category", "price", "quantity"].map((field) => (
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          {["name", "category", "price", "quantity"].map((f) => (
             <input
-              key={field}
-              type={field === "price" || field === "quantity" ? "number" : "text"}
-              placeholder={field}
-              value={form[field]}
-              onChange={(e) => setForm({ ...form, [field]: e.target.value })}
+              key={f}
+              type={f === "price" || f === "quantity" ? "number" : "text"}
+              placeholder={f}
+              value={form[f]}
+              onChange={(e) => setForm({ ...form, [f]: e.target.value })}
               className="px-3 py-2 rounded bg-white outline-none"
             />
           ))}
@@ -134,27 +111,30 @@ const AdminDashboard = () => {
             type="file"
             accept="image/*"
             onChange={(e) => setImage(e.target.files[0])}
-            className="px-3 py-2 rounded bg-white outline-none"
+            className="px-3 py-2 rounded bg-white"
           />
         </div>
 
         <button
           onClick={addSweet}
-          className="mt-4 px-6 py-2 rounded-full bg-[var(--color-primary)] font-medium"
+          className="mt-4 w-full md:w-auto px-6 py-2 rounded-full bg-[var(--color-primary)] font-medium"
         >
           Add Sweet
         </button>
       </div>
 
-      {/* ================= SWEET CARDS ================= */}
-      <div className="grid md:grid-cols-3 gap-6">
+      {/* SWEET CARDS */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {sweets.map((sweet) => (
-          <div key={sweet._id} className="p-5 rounded-xl shadow flex flex-col" style={{ backgroundColor: "var(--color-soft)" }}>
+          <div
+            key={sweet._id}
+            className="bg-[var(--color-soft)] p-5 rounded-xl shadow flex flex-col"
+          >
             {sweet.image && (
               <img
                 src={sweet.image}
                 alt={sweet.name}
-                className="w-full h-60 object-cover rounded-lg mb-3"
+                className="w-full h-72 object-cover rounded-lg mb-3"
               />
             )}
 
@@ -182,18 +162,16 @@ const AdminDashboard = () => {
               </button>
             </div>
 
-            {/* EDIT */}
             <button
               onClick={() => setEditingSweet(sweet)}
-              className="mb-2 w-full py-2 rounded bg-blue-500 text-white text-sm"
+              className="mb-2 py-2 rounded bg-blue-500 text-white text-sm"
             >
               Edit Sweet
             </button>
 
-            {/* DELETE */}
             <button
               onClick={() => deleteSweet(sweet._id)}
-              className="w-full py-2 rounded bg-red-500 text-white text-sm"
+              className="py-2 rounded bg-red-500 text-white text-sm"
             >
               Delete Sweet
             </button>
@@ -201,19 +179,19 @@ const AdminDashboard = () => {
         ))}
       </div>
 
-      {/* ================= EDIT MODAL ================= */}
+      {/* EDIT MODAL */}
       {editingSweet && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 px-4">
           <div className="bg-white p-6 rounded-xl w-full max-w-md">
             <h2 className="text-lg font-bold mb-4">Edit Sweet</h2>
 
-            {["name", "category", "price", "quantity"].map((field) => (
+            {["name", "category", "price", "quantity"].map((f) => (
               <input
-                key={field}
-                type={field === "price" || field === "quantity" ? "number" : "text"}
-                value={editingSweet[field]}
+                key={f}
+                type={f === "price" || f === "quantity" ? "number" : "text"}
+                value={editingSweet[f]}
                 onChange={(e) =>
-                  setEditingSweet({ ...editingSweet, [field]: e.target.value })
+                  setEditingSweet({ ...editingSweet, [f]: e.target.value })
                 }
                 className="w-full mb-2 px-3 py-2 border rounded"
               />
@@ -221,7 +199,6 @@ const AdminDashboard = () => {
 
             <input
               type="file"
-              accept="image/*"
               onChange={(e) => setEditImage(e.target.files[0])}
               className="mb-4"
             />
