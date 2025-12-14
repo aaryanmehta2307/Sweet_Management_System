@@ -105,23 +105,23 @@ Unauthorized users are automatically redirected.
 ## 🖼 Screenshots
 
 ### 🏠 Landing Page
-![Landing Page](Screenshots\Landing_Page_1.jpg)
-![Landing Page](Screenshots\Landing_Page_2.jpg)
+![Landing Page](Screenshots/Landing_Page_1.jpg)
+![Landing Page](Screenshots/Landing_Page_2.jpg)
 ### Authentication Page
-![Authentication Page](Screenshots\Auth.jpg)
+![Authentication Page](Screenshots/Auth.jpg)
 
 ### 👤 User Dashboard
-![User Dashboard](Screenshots\Dashboard.jpg)
+![User Dashboard](Screenshots/Dashboard.jpg)
 
 ### 🛠 Admin Dashboard
-![Admin Dashboard](Screenshots\Admin.jpg)
-![Admin Sweets Edit](Screenshots\Admin_sweets_edit.jpg)
+![Admin Dashboard](Screenshots/Admin.jpg)
+![Admin Sweets Edit](Screenshots/Admin_sweets_edit.jpg)
 
 ### 🛒 Cart Page
-![Cart Page](Screenshots\Cart.jpg)
+![Cart Page](Screenshots/Cart.jpg)
 
 ### 💳 Payment Page
-![Payment Page](Screenshots\payment.jpg)
+![Payment Page](Screenshots/payment.jpg)
 
 ### 🧪 Test Report
 Manual Testing Summary
