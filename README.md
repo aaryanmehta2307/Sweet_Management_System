@@ -74,6 +74,10 @@ PORT=5000
 MONGO_URI=mongodb+srv://sweetshop_user:Mehta%401123@cluster0.jv3otne.mongodb.net/sweetshop
 JWT_SECRET=supersecretkey
 ADMIN_SECRET=123456
+CLOUDINARY_CLOUD_NAME=dyqf8rica
+CLOUDINARY_API_KEY=785443865685276
+CLOUDINARY_API_SECRET=QS3f27fIfXSS92xlJRF0ofUGBtw
+
 
 
 ### Backend will run on:
