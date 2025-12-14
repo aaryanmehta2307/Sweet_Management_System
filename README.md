@@ -140,17 +140,24 @@ Image Upload	✅ Passed
 Input Validation	✅ Passed
 ### 🌍 Deployment
 
-🚧 Deployment is not completed yet
+✅ **Deployment Completed**
 
-The project currently runs locally only.
+The project is now fully deployed and accessible online.
 
-Planned Deployment
+#### 🚀 Tech Stack for Deployment
 
-Frontend: Vercel / Netlify
+- **Frontend:** Vercel  
+- **Backend:** Render  
+- **Database:** MongoDB Atlas  
+- **Media Storage:** Cloudinary  
 
-Backend: Render / Railway / AWS
+#### 🔗 Architecture Overview
+- The frontend is deployed on **Vercel** and communicates with the backend via REST APIs.
+- The backend is hosted on **Render**, handling authentication, business logic, and API requests.
+- **MongoDB Atlas** is used as a cloud-hosted NoSQL database for storing application data.
+- **Cloudinary** is integrated for efficient image and media upload, storage, and retrieval.
 
-This will be added in a future update.
+> ⚡ This setup ensures scalability, security, and high availability for the application.
 
 ### 🤖 4. AI Usage Policy (Mandatory)
 AI Tool Used
