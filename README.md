@@ -63,12 +63,17 @@ To **register as an Admin**:
 git clone <your-public-repo-link>
 cd Sweet_Management_System
 
-🔧 Backend Setup
+### 🔧 Backend Setup
 cd Backend
 npm install
 
  Run Backend
 npm run dev
+### Create .env file inside Backend/
+PORT=5000
+MONGO_URI=mongodb+srv://sweetshop_user:Mehta%401123@cluster0.jv3otne.mongodb.net/sweetshop
+JWT_SECRET=supersecretkey
+ADMIN_SECRET=123456
 
 
 ### Backend will run on:
@@ -97,21 +102,26 @@ Route	Access
 
 Unauthorized users are automatically redirected.
 
-### 🖼 Screenshots
+## 🖼 Screenshots
 
-📸 Screenshots of the final application will be added here.
+### 🏠 Landing Page
+![Landing Page](Screenshots\Landing_Page_1.jpg)
+![Landing Page](Screenshots\Landing_Page_2.jpg)
+### Authentication Page
+![Authentication Page](Screenshots\Auth.jpg)
 
-(Recommended screenshots)
+### 👤 User Dashboard
+![User Dashboard](Screenshots\Dashboard.jpg)
 
-Landing Page
+### 🛠 Admin Dashboard
+![Admin Dashboard](Screenshots\Admin.jpg)
+![Admin Sweets Edit](Screenshots\Admin_sweets_edit.jpg)
 
-User Dashboard
+### 🛒 Cart Page
+![Cart Page](Screenshots\Cart.jpg)
 
-Admin Dashboard
-
-Cart Page
-
-Payment Page
+### 💳 Payment Page
+![Payment Page](Screenshots\payment.jpg)
 
 ### 🧪 Test Report
 Manual Testing Summary
