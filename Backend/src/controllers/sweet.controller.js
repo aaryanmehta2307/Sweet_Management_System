@@ -1,10 +1,9 @@
 const sweetService = require("../services/sweet.service");
 
+/* ================= ADD SWEET ================= */
 const addSweet = async (req, res) => {
   try {
-    const imageUrl = req.file
-      ? `/uploads/${req.file.filename}`
-      : null;
+    const imageUrl = req.file ? req.file.path : null; // ✅ Cloudinary URL
 
     const sweet = await sweetService.createSweet({
       ...req.body,
@@ -17,12 +16,13 @@ const addSweet = async (req, res) => {
   }
 };
 
-
+/* ================= GET ALL SWEETS ================= */
 const getSweets = async (req, res) => {
   const sweets = await sweetService.getAllSweets();
   res.json(sweets);
 };
 
+/* ================= SEARCH SWEETS ================= */
 const searchSweets = async (req, res) => {
   const { name, category, minPrice, maxPrice } = req.query;
   const query = {};
@@ -45,13 +45,17 @@ const searchSweets = async (req, res) => {
   res.json(sweets);
 };
 
-
+/* ================= UPDATE SWEET (ADMIN) ================= */
 const updateSweet = async (req, res) => {
   try {
+    const imageUrl = req.file ? req.file.path : null; // ✅ Cloudinary
+
     const sweet = await sweetService.updateSweet(
       req.params.id,
-      req.body,
-      req.file // 👈 image
+      {
+        ...req.body,
+        ...(imageUrl && { image: imageUrl }), // update image only if uploaded
+      }
     );
 
     if (!sweet) {
@@ -64,13 +68,16 @@ const updateSweet = async (req, res) => {
   }
 };
 
-
+/* ================= DELETE SWEET ================= */
 const deleteSweet = async (req, res) => {
   const sweet = await sweetService.deleteSweet(req.params.id);
-  if (!sweet) return res.status(404).json({ message: "Sweet not found" });
+  if (!sweet) {
+    return res.status(404).json({ message: "Sweet not found" });
+  }
   res.json({ message: "Sweet deleted successfully" });
 };
 
+/* ================= PURCHASE SWEET ================= */
 const purchaseSweet = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -88,14 +95,17 @@ const purchaseSweet = async (req, res) => {
   }
 };
 
-
-
+/* ================= RESTOCK SWEET ================= */
 const restockSweet = async (req, res) => {
   const sweet = await sweetService.restockSweet(
     req.params.id,
     Number(req.body.quantity)
   );
-  if (!sweet) return res.status(404).json({ message: "Sweet not found" });
+
+  if (!sweet) {
+    return res.status(404).json({ message: "Sweet not found" });
+  }
+
   res.json(sweet);
 };
 
@@ -106,5 +116,5 @@ module.exports = {
   updateSweet,
   deleteSweet,
   purchaseSweet,
-  restockSweet
+  restockSweet,
 };

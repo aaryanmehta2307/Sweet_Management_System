@@ -152,7 +152,7 @@ const AdminDashboard = () => {
           <div key={sweet._id} className="p-5 rounded-xl shadow flex flex-col" style={{ backgroundColor: "var(--color-soft)" }}>
             {sweet.image && (
               <img
-                src={`http://localhost:5000${sweet.image}`}
+                src={sweet.image}
                 alt={sweet.name}
                 className="w-full h-60 object-cover rounded-lg mb-3"
               />

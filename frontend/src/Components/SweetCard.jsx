@@ -23,7 +23,7 @@ const SweetCard = ({ sweet }) => {
       >
         {sweet.image && (
           <img
-            src={`http://localhost:5000${sweet.image}`}
+            src={sweet.image}
             alt={sweet.name}
             className="w-full h-72 object-cover rounded-lg mb-3"
           />
