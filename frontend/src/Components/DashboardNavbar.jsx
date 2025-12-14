@@ -21,7 +21,7 @@ const DashboardNavbar = ({
 
   const [priceRange, setPriceRange] = useState({
     min: 0,
-    max: 1000,
+    max: 10000,
   });
 
   const logout = () => {
