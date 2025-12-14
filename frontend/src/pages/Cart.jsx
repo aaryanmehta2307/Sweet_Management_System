@@ -1,4 +1,4 @@
-import { useCart } from "../Context/cartContext";
+import { useCart } from "../Context/CartContext";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { apiRequest } from "../services/api";
