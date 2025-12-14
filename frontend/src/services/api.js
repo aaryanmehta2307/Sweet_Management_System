@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:5000";
+const BASE_URL = "https://sweet-management-system-nv4b.onrender.com";
 
 export const apiRequest = async (
   endpoint,
