@@ -19,7 +19,7 @@ const DashboardNavbar = ({
 
   const [priceRange, setPriceRange] = useState({
     min: 0,
-    max: 1000,
+    max: 10000,
   });
 
   const logout = () => {
@@ -103,7 +103,7 @@ const DashboardNavbar = ({
             <input
               type="range"
               min="0"
-              max="1000"
+              max="10000"
               step="10"
               value={priceRange.min}
               onChange={(e) => {
@@ -116,7 +116,7 @@ const DashboardNavbar = ({
             <input
               type="range"
               min="0"
-              max="1000"
+              max="10000"
               step="10"
               value={priceRange.max}
               onChange={(e) => {
