@@ -29,13 +29,13 @@ const Navbar = () => {
             </a>
           </li>
           <li>
-            <Link to="/login" className="hover:text-[var(--color-primary)] transition">
+            <Link to="/auth" className="hover:text-[var(--color-primary)] transition">
               Login
             </Link>
           </li>
           <li>
             <Link
-              to="/signup"
+              to="/auth"
               className="
                 px-5 py-2 rounded-full shadow
                 transition-all duration-200
@@ -71,10 +71,10 @@ const Navbar = () => {
           <ul className="flex flex-col gap-4 font-medium">
             <li><a href="#about">About</a></li>
             <li><a href="#sweets">Sweets</a></li>
-            <li><Link to="/login">Login</Link></li>
+            <li><Link to="/auth">Login</Link></li>
             <li>
               <Link
-                to="/signup"
+                to="/auth"
                 className="px-4 py-2 rounded-full inline-block shadow"
                 style={{ backgroundColor: "var(--color-primary)" }}
               >
